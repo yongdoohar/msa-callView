@@ -19,6 +19,7 @@ public class CallViewViewHandler {
 
     @StreamListener(KafkaProcessor.INPUT)
     public void whenCallRequested_then_CREATE_1 (@Payload CallRequested callRequested) {
+        System.out.println("\n\n##### callRequested ### " + "\n\n");
         try {
 
             if (!callRequested.validate()) return;
@@ -40,6 +41,7 @@ public class CallViewViewHandler {
 
     @StreamListener(KafkaProcessor.INPUT)
     public void whenBusinessTripStarted_then_UPDATE_1(@Payload BusinessTripStarted businessTripStarted) {
+        System.out.println("\n\n##### businessTripStarted ### " + "\n\n");
         try {
             if (!businessTripStarted.validate()) return;
                 // view 객체 조회
@@ -60,17 +62,22 @@ public class CallViewViewHandler {
     }
     @StreamListener(KafkaProcessor.INPUT)
     public void whenPaymentApproved_then_UPDATE_2(@Payload PaymentApproved paymentApproved) {
+        System.out.println("\n\n##### paymentApproved ### " + "\n\n");
+        
         try {
             if (!paymentApproved.validate()) return;
                 // view 객체 조회
             Optional<CallView> callViewOptional = callViewRepository.findById(paymentApproved.getCallId());
 
             if( callViewOptional.isPresent()) {
-                 CallView callView = callViewOptional.get();
+                System.out.println("\n\n##### paymentApproved.getId() ###   " + paymentApproved.getId() + "\n\n");
+                System.out.println("\n\n##### paymentApproved.getCallId() ###   " + paymentApproved.getCallId() + "\n\n");
+                System.out.println("\n\n##### paymentApproved.getStatus() ###   " + paymentApproved.getStatus() + "\n\n");
+                CallView callView = callViewOptional.get();
             // view 객체에 이벤트의 eventDirectValue 를 set 함
-                 callView.setPaymentStatus(paymentApproved.getStatus());
+                callView.setPaymentStatus(paymentApproved.getStatus());
                 // view 레파지 토리에 save
-                 callViewRepository.save(callView);
+                callViewRepository.save(callView);
                 }
 
 
@@ -80,6 +87,7 @@ public class CallViewViewHandler {
     }
     @StreamListener(KafkaProcessor.INPUT)
     public void whenCallRequestCanceled_then_UPDATE_3(@Payload CallRequestCanceled callRequestCanceled) {
+        System.out.println("\n\n##### callRequestCanceled ### " + "\n\n");
         try {
             if (!callRequestCanceled.validate()) return;
                 // view 객체 조회
